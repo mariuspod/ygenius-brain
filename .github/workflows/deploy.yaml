@@ -1,0 +1,20 @@
+name: Deploy ygenius-brain PRODUCTION
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["☃ Build & publish docker image"]
+    types:
+      - completed
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to ygenius-brain production
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: cd $HOME/ygenius-brain && git pull && ./deploy.sh
